@@ -1,8 +1,13 @@
 const Flight = require('../models/flight_model');
+const Airport = require('../models/airport_model');
 const {Flight_Schema} = require('../validations/Schema_validations');
 
 exports.flight_create_get = (req, res, next)=>{
-    res.send('GET to create flight');
+    Airport.find({},'airport_name')
+    .exec(function(err, airports){
+        if(err) console.log(err.message);
+        res.json(airports);
+    })
 }
 
 exports.flight_create_post = (req, res, next)=>{
@@ -13,11 +18,11 @@ exports.flight_create_post = (req, res, next)=>{
         res.json(message);
     }else{
         Flight.findOne({flight_code: req.body.flight_code}, function(err, results){
-            if(err) console.log('failed to find flight');
+            if(err) throw error('failed to find flight');
             if(results){
                 res.json('No duplicate flight code');
             }else{
-                const flight = new Flight({
+                const newFlight = new Flight({
                     flight_code : req.body.flight_code,
                     airline_name : req.body.airline_name,
                     capacity : req.body.capacity,
@@ -29,10 +34,19 @@ exports.flight_create_post = (req, res, next)=>{
                     depart_time : req.body.depart_time,
                     price : req.body.price
                 });
-                flight.save(function(err){
-                    if(err) console.log('failed to save flight');
-                    else{
-                    res.json('flight successfully saved');
+                Airport.findOne({airport_name: req.body.destination, airport_name: req.body.source })
+                .exec(function(err, airports){
+                    if(err) throw error('destination not valid in airport');
+                    if(airports == null){
+                        res.json('provided airport names not valid in airports');  
+                    }
+                    if(airports.airport_name != req.body.source && airports.airport_name != req.body.destination){
+                        res.json('source or destination mismatch');
+                    }else{
+                        newFlight.save(function(err){
+                            if(err) console.log(err.message);
+                            res.json('flight successfully saved');
+                        })
                     }
                 })
             }
