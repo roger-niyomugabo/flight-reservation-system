@@ -4,6 +4,7 @@ const path= require('path');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 //configure env file
 dotenv.config({path: './config/config.env'});
@@ -33,9 +34,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //using middlewares
+app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
+app.use(cookieParser());
 
 //routes
 app.use(homeRouter);

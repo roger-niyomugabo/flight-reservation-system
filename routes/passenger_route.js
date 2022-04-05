@@ -3,7 +3,7 @@ const router = require('express').Router();
 const passenger_controller = require('../controllers/passenger_controller')
 
 // GET request for creating passenger.
-router.post('/create', passenger_controller.passenger_create_get);
+router.get('/create', passenger_controller.passenger_create_get);
 
 // POST request for creating passenger.
 router.post('/create', passenger_controller.passenger_create_post);

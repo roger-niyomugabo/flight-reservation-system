@@ -1,12 +1,14 @@
+const { string } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const passengerSchema = new Schema(
     {
-        passenger_Id : {type: Number, required: true, unique: true},
         fullName : {type: String, required: true},
+        userName : {type: String, required: true, unique: true},
+        password : {type : String, required: true},
         occupation : {type: String},
-        email : {type: String, required: true},
+        email : {type: String, required: true, unique: true},
         phoneNumber : {type: String, required: true},
         country : {type: String, required: true},
         city : {type: String, required: true},
