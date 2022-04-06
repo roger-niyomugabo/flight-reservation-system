@@ -1,3 +1,4 @@
+const async = require('async');
 const Flight = require('../models/flight_model');
 const Passenger = require('../models/passenger_model');
 const Reservation = require('../models/reservation_model');
@@ -17,6 +18,21 @@ exports.reservation_create_post = (req, res, next)=>{
             message : message
         })
     }else{
+        async.parallel({
+            flights : function(callback){
+                Flight.find({flight_code: req.body.flight_code}, (err, flight)=>{
+                    if(err) console.log(err)
+                    if(flight){
+                        
+                    }
+                }).exec(callback)
+            },
+            passengers : function(callback){
+
+            }
+        }, function(err, results){
+
+        })
         Reservation.findOne({reserve_seat: req.body.reserve_seat}, (err, seat)=>{
             if(err) console.log(err);
             if(seat){
