@@ -73,3 +73,33 @@ exports.passenger_update_post = (req, res, next)=>{}
 exports.passenger_detail = (req, res, next)=>{}
 
 exports.passenger_list = (req, res, next)=>{}
+
+exports.passenger_login = async (req, res, next)=>{
+    if(req.body.userName == null || req.body.password == null){
+        res.json('all fields are required');
+    }else{
+        const passenger = await Passenger.findOne({userName:req.body.userName});
+        if(!passenger){
+            res.json('you have to first register');
+        }else{
+            bcrypt.compare(req.body.password, passenger.password, (err, isMatch)=>{
+                if(err) console.log(err.message);
+                if(!isMatch){
+                    res.json('incorrect password provided')
+                }else{
+                    const token = createToken(passenger._id);
+                    res.cookie('jwt', token, {httpOnly: true, maxAge : maxAge * 1000});
+                    res.status(200).json({
+                        message: 'logged in sucessfully',
+                        passenger: passenger
+                    })
+                }
+            })
+        }
+    }
+}
+
+exports.passenger_logout = (req, res, next)=>{
+    res.cookie('jwt', '', {maxAge : 1});
+    res.status(200).json({message:'loged out successfully'});
+}

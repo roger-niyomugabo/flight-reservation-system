@@ -1,12 +1,13 @@
 const router = require('express').Router();
+const {requireAuth} = require('../middlewares/auth');
 
 const reservation_controller = require('../controllers/reservation_controller')
 
 // GET request for creating reservation.
-router.post('/create', reservation_controller.reservation_create_get);
+router.get('/create', reservation_controller.reservation_create_get);
 
-// POST request for creating reservation.
-router.post('/create', reservation_controller.reservation_create_post);
+// POST request for creating reservation.|| reserve when  you  are authenticated
+router.post('/create', requireAuth, reservation_controller.reservation_create_post);
 
 // GET request to delete reservation.
 router.get('/:id/delete', reservation_controller.reservation_delete_get);

@@ -26,4 +26,10 @@ router.get('/:id', passenger_controller.passenger_detail);
 // GET request for list of all passengers.
 router.get('/', passenger_controller.passenger_list);
 
+//passenger login
+router.post('/login', passenger_controller.passenger_login);
+
+//passenger logout
+router.get('/logout', passenger_controller.passenger_logout);
+
 module.exports = router;

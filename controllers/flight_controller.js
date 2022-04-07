@@ -38,7 +38,9 @@ exports.flight_create_post = (req, res, next)=>{
                 .exec(function(err, airports){
                     if(err) throw error('destination not valid in airport');
                     if(airports == null){
-                        res.json('provided airport names not valid in airports');  
+                        const err = new Error('provided airport names not valid in airports');
+                        err.status=404;
+                        return next(err); 
                     }
                     if(airports.airport_name != req.body.source && airports.airport_name != req.body.destination){
                         res.json('source or destination mismatch');

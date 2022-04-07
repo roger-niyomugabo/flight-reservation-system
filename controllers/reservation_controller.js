@@ -18,44 +18,10 @@ exports.reservation_create_post = (req, res, next)=>{
             message : message
         })
     }else{
-        async.parallel({
-            flights : function(callback){
-                Flight.find({flight_code: req.body.flight_code}, (err, flight)=>{
-                    if(err) console.log(err)
-                    if(flight){
-                        
-                    }
-                }).exec(callback)
-            },
-            passengers : function(callback){
 
-            }
-        }, function(err, results){
-
-        })
-        Reservation.findOne({reserve_seat: req.body.reserve_seat}, (err, seat)=>{
-            if(err) console.log(err);
-            if(seat){
-                res.json({message: 'seat already reserved', seat: seat})
-            }else{
-                const newReservation = new Reservation({
-                    reservation_code: req.body.reservation_code,
-                    flight_code : req.body.flight_code,
-                    userName : req.body.userName,
-                    reserve_seat : req.body.reserve_seat,
-                    reservation_date : Date.now()
-                });
-                newReservation.save(function(err){
-                    if(err) console.log(err)
-                    res.status(200).json({
-                        status : 'success',
-                        message :  'successfully saved'
-                    })
-                })
-            }
-        })
-    }
+    }    
 }
+
 
 exports.reservation_delete_get = (req, res, next)=>{}
 
