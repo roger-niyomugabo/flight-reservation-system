@@ -45,7 +45,7 @@ app.use(homeRouter);
 app.use('/passengers', passengerRouter);
 app.use('/flights', flightRouter);
 app.use('/airports', airportRouter);
-app.use('/reservations', reservationRouter);
+app.use(reservationRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

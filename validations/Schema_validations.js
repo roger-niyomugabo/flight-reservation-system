@@ -70,12 +70,12 @@ const Schemas = {
     }),
     //Reservation validations
     Reservation_Schema : Joi.object({
-        reservation_code: Joi.string().pattern(new RegExp(/^[A-Z]{4}-[0-9]{4}$/)).required().messages({
-            'string.empty':'reservation code required',
-            'string.pattern.base':'provide something like ABCD-1234'
-        }),
-        flight_code : Joi.string().required().messages({'string.empty':'Flight code required'}),
-        userName : Joi.string().required().messages({'string.empty':'user name required'}),
+        // reservation_code: Joi.string().pattern(new RegExp(/^[A-Z]{4}-[0-9]{4}$/)).required().messages({
+        //     'string.empty':'reservation code required',
+        //     'string.pattern.base':'provide something like ABCD-1234'
+        // }),
+        // flight : Joi.string().required().messages({'string.empty':'Flight code required'}),
+        // passenger : Joi.string().required().messages({'string.empty':'user name required'}),
         reserve_seat : Joi.number().required().messages({'number.empty':'seat required'}),
     })
 }

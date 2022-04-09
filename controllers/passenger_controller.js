@@ -53,7 +53,8 @@ exports.passenger_create_post = async (req, res, next)=>{
                         res.status(200).json({
                             status: 'success',
                             message: 'passenger successfully loged in',
-                            passenger : passenger._id
+                            passenger : passenger,
+                            token: token
                         });
                     }
                 })
@@ -91,7 +92,8 @@ exports.passenger_login = async (req, res, next)=>{
                     res.cookie('jwt', token, {httpOnly: true, maxAge : maxAge * 1000});
                     res.status(200).json({
                         message: 'logged in sucessfully',
-                        passenger: passenger
+                        passenger: passenger,
+                        token: token
                     })
                 }
             })

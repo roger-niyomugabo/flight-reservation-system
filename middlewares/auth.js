@@ -9,6 +9,7 @@ const requireAuth = (req, res, next)=>{
             if(err) res.status(400).json(err.message);
             else{
                 console.log(decodedToken);
+                req.passengerId = decodedToken.id;
                 next()
             }
         })

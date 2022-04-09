@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 
 const reservationSchema = new Schema(
     {
-        reservation_code: {type: String, required: true},
-        flight_code : {
+        // reservation_code: {type: String, required: true},
+        flight : {
             type: Schema.Types.ObjectId, 
             ref: 'Flight', 
             required: true
         },
-        userName : {
+        passenger : {
             type: Schema.Types.ObjectId, 
             ref: 'Passenger', 
             required: true
