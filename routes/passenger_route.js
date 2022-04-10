@@ -1,6 +1,6 @@
 const router = require('express').Router();
-
-const passenger_controller = require('../controllers/passenger_controller')
+const {requireBasicAuth,requireAdminAuth} = require('../middlewares/auth');
+const passenger_controller = require('../controllers/passenger_controller');
 
 // GET request for creating passenger.
 router.get('/create', passenger_controller.passenger_create_get);

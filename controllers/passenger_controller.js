@@ -11,8 +11,8 @@ exports.passenger_create_get = (req, res, next)=>{
 
 //middleware function for creating token
 const maxAge = 3*24*60*60;
-const createToken = (id)=>{
-    return jwt.sign({id}, process.env.TOKEN_KEY,{expiresIn: maxAge});
+const createToken = (id, role)=>{
+    return jwt.sign({id, role}, process.env.TOKEN_KEY,{expiresIn: maxAge});
 }
 
 exports.passenger_create_post = async (req, res, next)=>{
@@ -24,8 +24,13 @@ exports.passenger_create_post = async (req, res, next)=>{
     }else{
         Passenger.findOne({userName: req.body.userName}, async (err, passenger)=>{
             if(err) console.log(err);
+            // if(passenger === "Admin"){
+            //     res.status(401).json({
+            //         message: 'Admin already exists',
+            //     })
+            // }
             if(passenger){
-                res.status(200).json({
+                res.status(401).json({
                     status : 'success',
                     message: 'passenger with that user name already registered',
                     passenger : passenger
@@ -43,12 +48,13 @@ exports.passenger_create_post = async (req, res, next)=>{
                     country : req.body.country,
                     city : req.body.city,
                     postcode : req.body.postcode,
-                    street : req.body.street
+                    street : req.body.street,
+                    role : req.body.role
                 });
                 Passenger.create(newPassenger,  (err, passenger)=>{
                     if(err) throw err;
-                    if(passenger){
-                        const token= createToken(passenger._id);
+                    if(passenger) {
+                        const token= createToken(passenger._id, passenger.role);
                         res.cookie('jwt', token, {httpOnly:true, maxAge: maxAge * 1000});
                         res.status(200).json({
                             status: 'success',
@@ -57,9 +63,9 @@ exports.passenger_create_post = async (req, res, next)=>{
                             token: token
                         });
                     }
-                })
+                });
             }
-        })
+        });
     }
 }
 
@@ -88,7 +94,7 @@ exports.passenger_login = async (req, res, next)=>{
                 if(!isMatch){
                     res.json('incorrect password provided')
                 }else{
-                    const token = createToken(passenger._id);
+                    const token = createToken(passenger._id, passenger.role);
                     res.cookie('jwt', token, {httpOnly: true, maxAge : maxAge * 1000});
                     res.status(200).json({
                         message: 'logged in sucessfully',

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const {requireAdminAuth} = require('../middlewares/auth');
 
 const flight_controller = require('../controllers/flight_controller')
 

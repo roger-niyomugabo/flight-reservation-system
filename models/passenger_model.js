@@ -13,7 +13,8 @@ const passengerSchema = new Schema(
         country : {type: String, required: true},
         city : {type: String, required: true},
         postcode : {type: String},
-        street : {type: String}
+        street : {type: String},
+        role : {type : String, enum: ['Admin', 'Basic'], default: "Basic" ,required: true}
     }
 );
 //virtual

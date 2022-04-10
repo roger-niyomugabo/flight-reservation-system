@@ -66,7 +66,8 @@ const Schemas = {
         city : Joi.string().required(),
         postcode : Joi.string().pattern(new RegExp(/^[a-z0-9][a-z0-9\- ]{0,10}[a-z0-9]$/)).allow(null, '').messages({
             'string.pattern.base' : 'invalid for postal code'}),
-        street : Joi.string().allow(null, '')
+        street : Joi.string().allow(null, ''),
+        role: Joi.string()
     }),
     //Reservation validations
     Reservation_Schema : Joi.object({

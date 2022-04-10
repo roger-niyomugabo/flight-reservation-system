@@ -1,16 +1,16 @@
 const router = require('express').Router();
-const {requireAuth} = require('../middlewares/auth');
+const {requireBasicAuth} = require('../middlewares/auth');
 
 const reservation_controller = require('../controllers/reservation_controller')
 
 // GET request for list of all reservations. for a particular passenger
-router.get('/reservations', requireAuth, reservation_controller.reservation_list);
+router.get('/reservations', requireBasicAuth, reservation_controller.reservation_list);
 
 // POST request for creating reservation.|| reserve when  you  are authenticated
-router.post('/flights/:flight_id/reserve', requireAuth, reservation_controller.reservation_create_post);//done
+router.post('/flights/:flight_id/reserve', requireBasicAuth, reservation_controller.reservation_create_post);//done
 
 //Cancel reservation
-router.get('/reservations/:reservation_id/cancel',requireAuth, reservation_controller.reservation_delete);
+router.get('/reservations/:reservation_id/cancel',requireBasicAuth, reservation_controller.reservation_delete);
 
 
 
