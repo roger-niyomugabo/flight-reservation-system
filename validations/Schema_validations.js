@@ -50,7 +50,7 @@ const Schemas = {
             'string.pattern.base' : 'provide your names with only letters'}),
         userName : Joi.string().trim().pattern(new RegExp(/^[A-Za-z0-9]{5,10}$/i)).required().messages({
             'string.empty' : 'User name required',
-            'string.pattern.base': 'User name consists of letters and numbers and atleast 5 chars long'}),
+            'string.pattern.base': 'User name consists of letters and numbers and atleast between 5 and 10 chars long'}),
         password : Joi.string().pattern(new RegExp(strongPassword)).required().messages({
             'string.empty' : 'password required',
             'string.pattern.base' : 'provide password with uppercase lowercase and include a digit'}),
@@ -71,13 +71,9 @@ const Schemas = {
     }),
     //Reservation validations
     Reservation_Schema : Joi.object({
-        // reservation_code: Joi.string().pattern(new RegExp(/^[A-Z]{4}-[0-9]{4}$/)).required().messages({
-        //     'string.empty':'reservation code required',
-        //     'string.pattern.base':'provide something like ABCD-1234'
-        // }),
-        // flight : Joi.string().required().messages({'string.empty':'Flight code required'}),
-        // passenger : Joi.string().required().messages({'string.empty':'user name required'}),
-        reserve_seat : Joi.number().required().messages({'number.empty':'seat required'}),
+        reserve_seat : Joi.number().positive().required().messages({
+            'number.empty' : 'reserve_seat required',
+            'number.positive' : 'reserve_seat must be positive'}),
     })
 }
 

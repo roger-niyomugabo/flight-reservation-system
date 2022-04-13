@@ -13,7 +13,7 @@ const flightSchema = new Schema(
         arrival_date :{type: Date, required: true},
         depart_time :{type: String, required: true},
         price: {type: Number, required: true},
-        // available_seats : {type: Number, required : true} // to be calculated capacity-1 something to be done
+        // available_seats : {type: Number, required : true} // to be calculated based on capacity
         // duration : {type: Date, required: true} // to be calculated arr-dep times 
     }
 );

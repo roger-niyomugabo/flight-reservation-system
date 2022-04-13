@@ -9,7 +9,6 @@ const cookieParser = require('cookie-parser');
 //configure env file
 dotenv.config({path: './config/config.env'});
 //importing routes
-const homeRouter = require('./routes/home');
 const passengerRouter = require('./routes/passenger_route');
 const flightRouter = require('./routes/flight_route');
 const reservationRouter = require('./routes/reservation_route');
@@ -28,11 +27,6 @@ mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
     console.log(err);
 });
 
-
-//setting ejs as template engine
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
 //using middlewares
 app.use(express.static('public'));
 app.use(morgan('dev'));
@@ -41,24 +35,18 @@ app.use(express.json());
 app.use(cookieParser());
 
 //routes
-app.use(homeRouter);
 app.use('/passengers', passengerRouter);
 app.use('/flights', flightRouter);
 app.use('/airports', airportRouter);
 app.use(reservationRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
 next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-// set locals, only providing error in development
-res.locals.message = err.message;
-res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-// render the error page
-res.status(err.status || 500);
-res.render('error');
-});
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(err.status || 500).send('An Error occured');
+})

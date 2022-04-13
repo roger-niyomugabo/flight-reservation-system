@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const airportSchema= new Schema(
     {
-        // airport_Id : {type : String, required : true},
         airport_name : {type : String, required: true},
         country :{type: String, required: true},
         city: {type:String, required:true},

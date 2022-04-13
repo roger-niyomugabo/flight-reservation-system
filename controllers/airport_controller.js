@@ -1,8 +1,15 @@
+const async = require('async');
 const Airport = require('../models/airport_model');
+const Flight = require('../models/flight_model');
 const {Airport_Schema} = require('../validations/Schema_validations');
 
-exports.airport_create_get = (req, res, next)=>{
-    res.send('GET to create airport');
+exports.airport_list = (req, res, next)=>{
+    Airport.find().exec((err, airports)=>{
+        if (err) return next(err);
+        res.status(200).json({
+            airports
+        })
+    })
 }
 
 exports.airport_create_post = (req, res, next)=>{
@@ -11,35 +18,50 @@ exports.airport_create_post = (req, res, next)=>{
 
     if(error){
         const message = error.details.map(currentError => currentError.message);
-        res.json(message);
+        res.status(401).json({message : 'validation errors', message});
     }else{
-    Airport.findOne({IATA_code: req.body.IATA_code}, function(err, results){
-        if(err) console.log('failed to find airport');
-        if(results){
-            res.json('No duplicate airport IATA allowed');
+    Airport.findOne({IATA_code: req.body.IATA_code}, (err, airport)=>{
+        if(err) return next(err);
+        if(airport){
+            res.status(401).json('No duplicate airport IATA allowed');
         }else{
-            const airport = new Airport({
-                airport_name : req.body.airport_name,
-                country : req.body.country,
-                city : req.body.city,
-                IATA_code : req.body.IATA_code
-            });
-            airport.save(function(err){
-                if(err) console.log('failed to save airport');
-                console.log('airport successfully saved');
-                res.json('successfully saved');
+            const newAirport = new Airport(req.body);
+            Airport.create(newAirport, (err, airport)=>{
+                if(err) return next(err);
+                res.status(200).json({
+                    message: 'Airport added',
+                    airport
+                })
             })
         }
     })
     }
 }
 
-exports.airport_delete_get = (req, res, next)=>{}
-
-exports.airport_delete_post = (req, res, next)=>{}
-
-exports.airport_detail = (req, res, next)=>{}
-
-exports.airport_list = (req, res, next)=>{
-    res.send('Here are airports');
+exports.airport_delete = (req, res, next)=>{
+    const airport_id = req.params.airport_id;
+    async.parallel({
+        sources: callback => {
+            Flight.find({source: airport_id}).exec(callback);
+        },
+        destinations: callback => {
+            Flight.find({destination: airport_id}).exec(callback);
+        }
+    }, (err, results) => {
+        if(err) return next(err);
+        if(results.sources.length > 0 || results.destinations.length > 0){
+            res.status(401).json({
+                message: 'Airport can not be deleted, it still has flights associated to it',
+                associated_flights: results
+            });
+        }else{
+            Airport.findByIdAndDelete(airport_id, (err, airport)=>{
+                if(err) return next(err);
+                res.status(200).json({
+                    message : 'airport deleted successfully',
+                    deleted_Airport : airport
+                });
+            })
+        }
+    })
 }
