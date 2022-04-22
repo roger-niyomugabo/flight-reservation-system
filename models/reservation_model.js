@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const reservationSchema = new Schema(
@@ -17,10 +17,6 @@ const reservationSchema = new Schema(
         reservation_date : {type: Date}
     }
 );
-//virtual
-reservationSchema.virtual('url').get(function(){
-    return '/reservations' + this._id;
-})
 
 const Reservation = mongoose.model('Reservation', reservationSchema);
-module.exports = Reservation;
+export default Reservation;

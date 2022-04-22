@@ -1,44 +1,40 @@
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 dotenv.config({path: './config/config.env'});
 
-const requireBasicAuth = (req, res, next)=>{
-    const token = req.cookies.jwt;
-    if(token){
-        jwt.verify(token, process.env.TOKEN_KEY, (err,decodedToken)=>{
-            if(err) res.status(400).json(err.message);
-            if(decodedToken.role !== "Basic"){
+const requireBasicAuth = async (req, res, next) => {
+    const bearerHeader = req.header('authorization');
+    if (bearerHeader) {
+        const bearerToken = bearerHeader.split(' ')[1];
+        const decodedToken = await jwt.verify(bearerToken, process.env.TOKEN_KEY);
+            if (decodedToken.role !== "Basic") {
                 res.status(401).json({message: 'Not authorized'})
-            }else{
-                console.log(decodedToken);
+            } else {
                 req.passengerId = decodedToken.id;
                 next();
             }
-        })
-    }else{
-        res.json({
-            message: 'token not provided, first login'
-        })
+    } else {
+        res.status(401).json({
+            message: 'Bearer not provided'
+        });
     }
 }
 
-const requireAdminAuth = (req, res, next)=>{
-    const token = req.cookies.jwt;
-    if(token){
-        jwt.verify(token, process.env.TOKEN_KEY, (err,decodedToken)=>{
-            if(err) res.status(400).json(err.message);
-            if(decodedToken.role !== "Admin"){
+const requireAdminAuth = async (req, res, next) => {
+    const bearerHeader = req.header('authorization');
+    if (bearerHeader) {
+        const bearerToken = bearerHeader.split(' ')[1];
+        const decodedToken = await jwt.verify(bearerToken, process.env.TOKEN_KEY);
+            if (decodedToken.role !== "Admin") {
                 res.status(401).json({message: 'Not authorized'})
-            }else{
-                console.log(decodedToken);
+            } else {
                 req.passengerId = decodedToken.id;
                 next();
             }
-        })
-    }else{
-        res.json({
-            message: 'token not provided, first login'
-        })
+    } else {
+        res.status(401).json({
+            message: 'Bearer not provided'
+        });
     }
 }
-module.exports = {requireBasicAuth, requireAdminAuth};
+export {requireBasicAuth, requireAdminAuth};

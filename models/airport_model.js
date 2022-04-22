@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const airportSchema= new Schema(
@@ -9,10 +9,6 @@ const airportSchema= new Schema(
         IATA_code : {type: String, required: true, unique: true}
     }
 );
-//virtual
-airportSchema.virtual('url').get(function(){
-    return '/airports' + this._id;
-});
 
 const Airport = mongoose.model('Airport', airportSchema);
-module.exports = Airport;
+export default Airport;

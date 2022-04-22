@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const flightSchema = new Schema(
@@ -17,10 +17,6 @@ const flightSchema = new Schema(
         // duration : {type: Date, required: true} // to be calculated arr-dep times 
     }
 );
-//virtual
-flightSchema.virtual('url').get(function(){
-    return '/flights' + this._id;
-})
 
 const Flight = mongoose.model('Flight', flightSchema);
-module.exports = Flight;
+export default Flight;

@@ -1,38 +1,29 @@
-const express = require('express');
-const createError = require('http-errors');
-const path= require('path');
-const morgan = require('morgan');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import createError from 'http-errors';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import connectDB from './database/connection.js';
 
 //configure env file
 dotenv.config({path: './config/config.env'});
 //importing routes
-const passengerRouter = require('./routes/passenger_route');
-const flightRouter = require('./routes/flight_route');
-const reservationRouter = require('./routes/reservation_route');
-const airportRouter = require('./routes/airport_route');
+import passengerRouter from './routes/passenger_route.js';
+import flightRouter from './routes/flight_route.js';
+import reservationRouter from './routes/reservation_route.js';
+import airportRouter from './routes/airport_route.js';
 
 //express app
 const app = express();
 
 //databse connection 
-const DB_URI = process.env.MONGODB_URI;
-mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
-.then(results=>{
-    console.log('Database connected');
-    app.listen(3000);
-}).catch(err=>{
-    console.log(err);
-});
+connectDB();
+
+app.listen(3000);
 
 //using middlewares
-app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.use(cookieParser());
 
 //routes
 app.use('/passengers', passengerRouter);

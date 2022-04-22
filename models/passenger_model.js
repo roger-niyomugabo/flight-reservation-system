@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const passengerSchema = new Schema(
@@ -16,10 +16,6 @@ const passengerSchema = new Schema(
         role : {type : String, enum: ['Admin', 'Basic'], default: "Basic" ,required: true}
     }
 );
-//virtual
-passengerSchema.virtual('url').get(function(){
-    return '/passengers' + this._id;
-});
 
 const Passenger = mongoose.model('Passenger', passengerSchema);
-module.exports = Passenger;
+export default Passenger;
